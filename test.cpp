@@ -49,9 +49,9 @@ namespace tut
 	void object::test<3>()
 	{
 		set_test_name("same type");
-		//ensure_equals(lexical_cast<int>(10), 10);
-		//ensure_equals(lexical_cast<float>(10.0f), 10.0f);
-		//ensure_equals(lexical_cast<std::string>(std::string("ABc")), "ABc");
+		ensure_equals(lexical_cast<int>(10), 10);
+		ensure_equals(lexical_cast<float>(10.0f), 10.0f);
+		ensure_equals(lexical_cast<std::string>(std::string("ABc")), "ABc");
 	}
 
 	template<>

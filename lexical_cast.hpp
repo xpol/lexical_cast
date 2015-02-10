@@ -210,7 +210,6 @@ namespace detail {
 	{
 		static T apply(const T& v)
 		{
-			static_assert(false, "Cant cast same type using lexical_cast");
 			return v;
 		}
 	};
