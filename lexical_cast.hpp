@@ -4,6 +4,7 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <sstream>
+#include <stdexcept>
 
 namespace detail {
 	// https://www.facebook.com/notes/facebook-engineering/three-optimization-tips-for-c/10151361643253920
@@ -158,6 +159,34 @@ namespace detail {
 			return t;
 		}
 	};
+
+	struct bool_helper {
+		static const std::string __true;
+		static const std::string __false;
+
+		static std::string to_string(bool v)
+		{
+			return v ? __true : __false;
+		}
+
+		static bool from_string(const char* v)
+		{
+			if (__true.compare(v) == 0)
+				return true;
+			if (__false.compare(v) == 0)
+				return false;
+			throw std::runtime_error(std::string("cant convert string to bool: ") + v);
+		}
+		static bool from_string(const std::string& v)
+		{
+			if (v == __true)
+				return true;
+			if (v == __false)
+				return false;
+			throw std::runtime_error(std::string("cant convert string to bool: ") + v);
+		}
+	};
+	
 }
 
 namespace detail {
@@ -170,7 +199,7 @@ namespace detail {
 
 
 	template <typename Target>
-	struct convert<Target, std::string, false>
+	struct convert < Target, std::string, false >
 	{
 		static Target apply(const std::string& v)
 		{
@@ -202,6 +231,42 @@ namespace detail {
 		static std::string apply(const Source& v)
 		{
 			return detail::to_string_helper<Source>::to_string(v);
+		}
+	};
+
+	template <>
+	struct convert < std::string, bool, false >
+	{
+		static std::string apply(bool v)
+		{
+			return bool_helper::to_string(v);
+		}
+	};
+
+	template <>
+	struct convert < bool, std::string, false >
+	{
+		static bool apply(const std::string& v)
+		{
+			return bool_helper::from_string(v);
+		}
+	};
+
+	template <>
+	struct convert < bool, const char*, false >
+	{
+		static bool apply(const char* v)
+		{
+			return bool_helper::from_string(v);
+		}
+	};
+
+	template <unsigned N>
+	struct convert < bool, const char[N], false >
+	{
+		static bool apply(const char(&v)[N])
+		{
+			return bool_helper::from_string(static_cast<const char*>(&v[0]));
 		}
 	};
 

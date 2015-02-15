@@ -76,6 +76,25 @@ namespace tut
 		ensure_equals(lexical_cast<std::string>(-1.23423e15), "-1.234230e+015");
 	}
 
+	template<>
+	template<>
+	void object::test<6>()
+	{
+		set_test_name("bool -> string");
+		ensure_equals(lexical_cast<std::string>(true), "true");
+		ensure_equals(lexical_cast<std::string>(false), "false");
+	}
+
+	template<>
+	template<>
+	void object::test<7>()
+	{
+		set_test_name("string -> bool");
+		ensure_equals(lexical_cast<bool>(std::string("true")), true);
+		ensure_equals(lexical_cast<bool>(std::string("false")), false);
+		ensure_equals(lexical_cast<bool>("true"), true);
+		ensure_equals(lexical_cast<bool>("false"), false);
+	}
 
 	test_runner_singleton runner;
 }

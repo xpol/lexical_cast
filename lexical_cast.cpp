@@ -4,6 +4,12 @@
 #include "lexical_cast.hpp"
 #include <stdint.h>
 
+
+namespace detail {
+	const std::string bool_helper::__true("true");
+	const std::string bool_helper::__false("false");
+}
+
 namespace detail {
 	/**
 	* Powers of 10
